@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "prac"
+version = "0.1.0"
+description = ""
+authors = ["hajin <f-a-k@naver.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.82.0"
+uvicorn = "^0.18.3"
+SQLAlchemy = "^1.4.41"
+PyMySQL = "^1.0.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
