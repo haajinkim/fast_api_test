@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 import crud, models, schemas
 from database import SessionLocal, engine
-
 models.Base.metadata.create_all(bind=engine)
+import httpx
 
 app = FastAPI()
 
@@ -17,6 +17,7 @@ def get_db():
     finally:
         db.close()
 
+URL = "https://631982548e51a64d2be5dca5.mockapi.io/users"
 
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -30,6 +31,20 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
+
+
+@app.get("/hi/" )
+async def call_other_api():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(URL)
+        data = response.json()
+        arr = []
+        for i in range(len(data)):
+            if data[i]['name'] == "Lila Bahringer":
+                arr.append(data[i])
+        if arr == []:
+            raise HTTPException(status_code=400, detail="존재하지 않는 데이터 입니다.")
+        return arr
 
 
 @app.get("/users/{user_id}", response_model=schemas.User)
