@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 import json
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 SERECT_FILE = os.path.join(BASE_DIR, 'serects.json')
 serects = json.loads(open(SERECT_FILE).read())
 DB = serects["DB"]
@@ -16,4 +17,11 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-BASE = declarative_base()
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
