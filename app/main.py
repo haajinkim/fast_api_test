@@ -33,7 +33,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/hi/" )
+@app.get("/api_test/" )
 async def call_other_api():
     async with httpx.AsyncClient() as client:
         response = await client.get(URL)
