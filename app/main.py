@@ -1,13 +1,16 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
-
+from typing import Union
+from pydantic import BaseModel
 import crud, models, schemas
 from database import SessionLocal, engine
-models.Base.metadata.create_all(bind=engine)
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 import httpx
 
 app = FastAPI()
-
+models.Base.metadata.create_all(bind=engine)
 
 # Dependency
 def get_db():
@@ -27,14 +30,33 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
+class Track(BaseModel):
+    role: str
+    instruments: list[str]
+    is_primary: bool
+
+class Request(BaseModel):
+    genre: str
+    bpm : list[int]
+    keys : list[str]
+    time_signatures: str
+    tracks: Union[list[Track], None] = None
+
+
+@app.post("/test")
+async def test(request: Request):
+    print(request)
+    return "성공"
+
+
 @app.get("/users/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
-@app.get("/api_test/" )
-async def call_other_api():
+@app.get("/api_test/")
+async def call_other_api() : 
     async with httpx.AsyncClient() as client:
         response = await client.get(URL)
         data = response.json()
@@ -45,6 +67,27 @@ async def call_other_api():
         if arr == []:
             raise HTTPException(status_code=400, detail="존재하지 않는 데이터 입니다.")
         return arr
+
+class TypeTest(BaseModel):
+    input : int
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: TypeTest, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+
+        content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+    )
+
+
+@app.post("/type_test/")
+async def type_test(input:TypeTest) -> int:
+
+    return {"input": input}
+
+
+
+
 
 
 @app.get("/users/{user_id}", response_model=schemas.User)

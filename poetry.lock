@@ -36,6 +36,17 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "cffi"
+version = "1.15.1"
+description = "Foreign Function Interface for Python calling C code."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycparser = "*"
+
+[[package]]
 name = "click"
 version = "8.1.3"
 description = "Composable command line interface toolkit"
@@ -53,6 +64,25 @@ description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "cryptography"
+version = "38.0.1"
+description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+cffi = ">=1.12"
+
+[package.extras]
+docs = ["sphinx (>=1.6.5,!=1.8.0,!=3.1.0,!=3.1.1)", "sphinx-rtd-theme"]
+docstest = ["pyenchant (>=1.6.11)", "twine (>=1.12.0)", "sphinxcontrib-spelling (>=4.0.1)"]
+pep8test = ["black", "flake8", "flake8-import-order", "pep8-naming"]
+sdist = ["setuptools-rust (>=0.11.4)"]
+ssh = ["bcrypt (>=3.1.5)"]
+test = ["pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
 
 [[package]]
 name = "fastapi"
@@ -163,6 +193,14 @@ description = "Python style guide checker"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "pycparser"
+version = "2.21"
+description = "C parser in Python"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pydantic"
@@ -294,14 +332,16 @@ standard = ["colorama (>=0.4)", "httptools (>=0.4.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4306399a04d11095c8d98b9e92ab34fc07148625446c44d07a878b55bf2e2b5d"
+content-hash = "e266d895f3734a18c2113c693536f5d5ac8a64d6bb6093c3c51ab9e66737af5b"
 
 [metadata.files]
 anyio = []
 autopep8 = []
 certifi = []
+cffi = []
 click = []
 colorama = []
+cryptography = []
 fastapi = []
 greenlet = []
 h11 = []
@@ -311,6 +351,7 @@ idna = []
 mysql = []
 mysqlclient = []
 pycodestyle = []
+pycparser = []
 pydantic = []
 pymysql = []
 rfc3986 = []
