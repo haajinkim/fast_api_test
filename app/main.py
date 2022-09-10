@@ -68,11 +68,9 @@ async def call_other_api() :
             raise HTTPException(status_code=400, detail="존재하지 않는 데이터 입니다.")
         return arr
 
-class TypeTest(BaseModel):
-    input : int
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: TypeTest, exc: RequestValidationError):
+async def validation_exception_handler(request: schemas.TypeTest, exc: RequestValidationError):
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
 
@@ -81,7 +79,7 @@ async def validation_exception_handler(request: TypeTest, exc: RequestValidation
 
 
 @app.post("/type_test/")
-async def type_test(input:TypeTest) -> int:
+async def type_test(input:schemas.TypeTest) -> int:
 
     return {"input": input}
 
